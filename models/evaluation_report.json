@@ -1,0 +1,67 @@
+{
+  "classification": {
+    "accuracy": 0.4177215189873418,
+    "balanced_accuracy": 0.35403348888644615,
+    "macro_f1": 0.36243782268854663,
+    "cohen_kappa": 0.2587042804898446,
+    "roc_auc_macro": 0.7686887363272883,
+    "per_class_f1": {
+      "Benign": 0.8863157894736842,
+      "Likely_Benign": 0.7464788732394366,
+      "VUS": 0.09586776859504133,
+      "Likely_Pathogenic": 0.08352668213457076,
+      "Pathogenic": 0.0
+    }
+  },
+  "calibration": {
+    "ece": 0.19990538645816197,
+    "mce": 0.979716194260226,
+    "brier_score": 0.2070880222207613
+  },
+  "clinical": {
+    "acmg_concordance": 0.4177215189873418,
+    "critical_error_rate": 0.0,
+    "pathogenic_sensitivity": 0.5473441108545035,
+    "pathogenic_specificity": 0.6713483146067416,
+    "vus_rate": 0.14990006662225183,
+    "binary_concordance": 1.0
+  },
+  "confusion_matrix": [
+    [
+      421,
+      37,
+      0,
+      0,
+      0
+    ],
+    [
+      71,
+      159,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      29,
+      0,
+      351
+    ],
+    [
+      0,
+      0,
+      176,
+      18,
+      22
+    ],
+    [
+      0,
+      0,
+      20,
+      197,
+      0
+    ]
+  ],
+  "n_critical_errors": 0
+}

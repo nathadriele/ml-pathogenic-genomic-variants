@@ -1,0 +1,168 @@
+# Configuration for VariantClassifier
+project:
+  name: "variant-classifier"
+  version: "1.0.0"
+  environment: "development"
+
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  external_dir: "data/external"
+  splits_dir: "data/splits"
+  train_size: 0.7
+  val_size: 0.15
+  test_size: 0.15
+  random_seed: 42
+
+model:
+  type: "ensemble"
+  n_classes: 5
+  class_names:
+    - "Benign"
+    - "Likely_Benign"
+    - "VUS"
+    - "Likely_Pathogenic"
+    - "Pathogenic"
+
+  xgboost:
+    n_estimators: 500
+    max_depth: 6
+    learning_rate: 0.05
+    subsample: 0.8
+    colsample_bytree: 0.8
+    early_stopping_rounds: 50
+    random_state: 42
+
+  lightgbm:
+    n_estimators: 500
+    max_depth: 8
+    learning_rate: 0.05
+    num_leaves: 63
+    feature_fraction: 0.8
+    bagging_fraction: 0.8
+    bagging_freq: 5
+    random_state: 42
+
+  catboost:
+    iterations: 500
+    depth: 6
+    learning_rate: 0.05
+    random_seed: 42
+
+  calibration:
+    method: "isotonic"  # or "sigmoid"
+    cv: 5
+
+  thresholds:
+    pathogenic: 0.5
+    benign: 0.5
+
+training:
+  cross_validation:
+    n_splits: 5
+    stratify: true
+
+  hyperparameter_tuning:
+    enabled: false
+    n_trials: 50
+    timeout: 3600
+
+features:
+  # ACMG-based features
+  population_frequency:
+    - "gnomad_af"
+    - "gnomad_af_popmax"
+    - "is_absent_gnomad"
+
+  computational:
+    - "revel_score"
+    - "cadd_phred"
+    - "spliceai_max"
+    - "phylop_100way"
+    - "gerp_rs"
+
+  functional:
+    - "consequence_severity"
+    - "is_lof"
+    - "is_missense"
+    - "is_splice_region"
+
+  clinical:
+    - "clinvar_stars"
+    - "clinvar_submissions"
+    - "has_functional_study"
+
+  gene_context:
+    - "gene_pli"
+    - "gene_loeuf"
+    - "gene_missense_z"
+    - "is_disease_gene"
+    - "inheritance_mode"
+
+  protein_context:
+    - "domain_annotation"
+    - "is_active_site"
+    - "aa_change_grantham"
+
+  metadata:
+    - "variant_type"
+    - "transcript_biotype"
+    - "exon_number"
+    - "protein_position_normalized"
+
+evaluation:
+  metrics:
+    - "accuracy"
+    - "balanced_accuracy"
+    - "macro_f1"
+    - "roc_auc"
+    - "cohen_kappa"
+    - "ecalibration_error"
+    - "clinical_concordance"
+
+  targets:
+    min_accuracy: 0.88
+    min_macro_f1: 0.85
+    max_calibration_error: 0.05
+    min_clinical_concordance: 0.88
+    max_critical_error_rate: 0.02
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  log_level: "info"
+
+  cors:
+    enabled: true
+    origins:
+      - "http://localhost:8501"
+      - "http://localhost:3000"
+
+mlflow:
+  tracking_uri: "http://localhost:5000"
+  experiment_name: "variant-classifier"
+  auto_log: true
+
+logging:
+  version: 1
+  disable_existing_loggers: false
+  formatters:
+    standard:
+      format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: INFO
+      formatter: standard
+      stream: ext://sys.stdout
+    file:
+      class: logging.handlers.RotatingFileHandler
+      level: INFO
+      formatter: standard
+      filename: logs/variant_classifier.log
+      maxBytes: 10485760
+      backupCount: 5
+  root:
+    level: INFO
+    handlers: [console, file]
