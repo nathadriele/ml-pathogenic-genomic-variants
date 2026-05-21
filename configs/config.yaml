@@ -1,4 +1,3 @@
-# Configuration for VariantClassifier
 project:
   name: "variant-classifier"
   version: "1.0.0"
