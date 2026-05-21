@@ -1,7 +1,3 @@
-"""
-Componente para exibir informações de variantes genômicas.
-"""
-
 from typing import Dict, Any, Optional
 import streamlit as st
 import plotly.graph_objects as go
@@ -12,14 +8,6 @@ def display_variant_card(
     prediction_result: Optional[Dict[str, Any]] = None,
     show_details: bool = True
 ) -> None:
-    """
-    Exibe um card com informações da variante e predição.
-
-    Args:
-        variant_data: Dicionário com dados da variante (28 features ACMG)
-        prediction_result: Dicionário opcional com resultado da predição
-        show_details: Se True, exibe detalhes completos da variante
-    """
     st.subheader("Informações da Variante")
 
     # Layout em duas colunas
