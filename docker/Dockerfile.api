@@ -2,16 +2,12 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Instala dependências
 COPY pyproject.toml .
 RUN pip install --no-cache-dir -e .[dev] && \
     pip install --no-cache-dir uvicorn fastapi pydantic loguru requests
 
-# Copia código
 COPY src/ src/
 
-# Expõe porta
 EXPOSE 8000
 
-# Comando de início
 CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
