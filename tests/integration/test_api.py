@@ -2,7 +2,6 @@
 Integration tests for the VariantClassifier API.
 
 Author: VariantClassifier Team
-Date: 2026
 """
 
 import pytest
