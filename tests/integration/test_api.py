@@ -1,8 +1,8 @@
 """
-Testes de integração para API.
+Integration tests for the VariantClassifier API.
 
 Author: VariantClassifier Team
-Date: January 2026
+Date: 2026
 """
 
 import pytest
@@ -12,43 +12,41 @@ from src.api.main import app
 
 
 @pytest.fixture
-def client():
-    """Cliente de teste FastAPI."""
+def client() -> TestClient:
     return TestClient(app)
 
 
-def test_health_endpoint(client):
-    """Testa endpoint de health check."""
+def test_health_endpoint(client: TestClient) -> None:
     response = client.get("/health")
 
     assert response.status_code == 200
 
     data = response.json()
+
     assert data["status"] == "healthy"
     assert "model_loaded" in data
     assert "preprocessor_loaded" in data
 
 
-def test_predict_endpoint_missing_data(client):
-    """Testa predição com dados faltando."""
-    response = client.post("/predict", json={
+def test_predict_endpoint_with_missing_required_fields(client: TestClient) -> None:
+    payload = {
         "variant": {
             "chromosome": "chr17",
-            # Faltando campos obrigatórios
         }
-    })
+    }
 
-    # Deve retornar erro de validação
+    response = client.post("/predict", json=payload)
+
     assert response.status_code == 422
 
 
-def test_model_info_endpoint(client):
-    """Testa endpoint de informações do modelo."""
+def test_model_info_endpoint(client: TestClient) -> None:
     response = client.get("/model/info")
 
     assert response.status_code == 200
 
     data = response.json()
+
     assert "model_type" in data
     assert "classes" in data
     assert "n_features" in data
